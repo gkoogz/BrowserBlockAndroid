@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BrowserBlock</string>
+    <string name="accessibility_description">Prevents installed web browsers from remaining open during a user-requested one-hour block.</string>
+</resources>

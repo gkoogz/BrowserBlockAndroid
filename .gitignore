@@ -1,0 +1,23 @@
+# Android and Gradle output
+.gradle/
+.gradle-local/
+.android-home/
+**/build/
+
+# Local Android toolchain and machine configuration
+.tools/
+local.properties
+
+# Local signing material
+*.keystore
+*.jks
+
+# Codex attachments
+.codex-remote-attachments/
+
+# IDE and OS files
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
