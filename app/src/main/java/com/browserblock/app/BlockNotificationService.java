@@ -9,6 +9,21 @@ import android.os.Looper;
 
 public final class BlockNotificationService extends Service {
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable refreshNotification = new Runnable() {
+        @Override
+        public void run() {
+            if (!BlockState.isActive(BlockNotificationService.this)) {
+                return;
+            }
+
+            long endTime = BlockState.endTime(BlockNotificationService.this);
+            getSystemService(android.app.NotificationManager.class)
+                .notify(
+                    NotificationHelper.BLOCK_NOTIFICATION_ID,
+                    NotificationHelper.activeBlock(BlockNotificationService.this, endTime));
+            handler.postDelayed(this, 1_000L);
+        }
+    };
     private final Runnable finishBlock = () -> {
         if (!BlockState.isActive(this)) {
             BlockState.clear(this);
@@ -47,6 +62,8 @@ public final class BlockNotificationService extends Service {
         startForeground(
             NotificationHelper.BLOCK_NOTIFICATION_ID,
             NotificationHelper.activeBlock(this, endTime));
+        handler.removeCallbacks(refreshNotification);
+        handler.postDelayed(refreshNotification, 1_000L);
         handler.removeCallbacks(finishBlock);
         handler.postDelayed(
             finishBlock, Math.max(1L, endTime - System.currentTimeMillis()));
@@ -55,6 +72,7 @@ public final class BlockNotificationService extends Service {
 
     @Override
     public void onDestroy() {
+        handler.removeCallbacks(refreshNotification);
         handler.removeCallbacks(finishBlock);
         if (!BlockState.isActive(this)) {
             stopForeground(STOP_FOREGROUND_REMOVE);
