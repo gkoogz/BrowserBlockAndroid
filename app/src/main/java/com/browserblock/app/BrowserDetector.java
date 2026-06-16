@@ -95,6 +95,27 @@ final class BrowserDetector {
         "com.google.android.apps.youtube.music.revanced"
     ));
 
+    private static final Set<String> NEVER_BLOCK_PACKAGES = new HashSet<>(Arrays.asList(
+        "android",
+        "com.android.documentsui",
+        "com.android.filemanager",
+        "com.android.packageinstaller",
+        "com.android.permissioncontroller",
+        "com.android.providers.downloads.ui",
+        "com.android.settings",
+        "com.google.android.documentsui",
+        "com.google.android.packageinstaller",
+        "com.google.android.permissioncontroller",
+        "com.google.android.providers.media.module",
+        "com.sec.android.app.launcher",
+        "com.sec.android.app.myfiles",
+        "com.samsung.android.app.galaxyfinder",
+        "com.samsung.android.app.settings.bixby",
+        "com.samsung.android.packageinstaller",
+        "com.samsung.android.permissioncontroller",
+        "com.samsung.android.settings"
+    ));
+
     private BrowserDetector() {}
 
     static Set<String> installedBrowsers(Context context) {
@@ -127,6 +148,7 @@ final class BrowserDetector {
         addInstalledYouTubeLikePackages(pm, packages);
 
         packages.remove(context.getPackageName());
+        packages.removeAll(NEVER_BLOCK_PACKAGES);
         return packages;
     }
 
